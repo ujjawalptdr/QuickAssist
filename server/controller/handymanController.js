@@ -123,90 +123,90 @@ const handymanSignup = async (req, res) => {
 
 
 // route - http://localhost:8080/api/handyman/signup/verify
-const handymanVerifySignup = async (req, res) => {
-    const {
-        name: Name,
-        email: Email,
-        otp: inputOtp,
-        password: Password,
-        phone: Phone,
-        aadharNumber: AadharNumber,
-        aadharFront: AadharFront,
-        aadharBack: AadharBack,
-        services: Services,
-        profile: Profile,
-        lat: Lat,
-        long: Long,
-    } = req.body;
+// const handymanVerifySignup = async (req, res) => {
+//     const {
+//         name: Name,
+//         email: Email,
+//         otp: inputOtp,
+//         password: Password,
+//         phone: Phone,
+//         aadharNumber: AadharNumber,
+//         aadharFront: AadharFront,
+//         aadharBack: AadharBack,
+//         services: Services,
+//         profile: Profile,
+//         lat: Lat,
+//         long: Long,
+//     } = req.body;
 
-    Otp.find({ email: Email }, async function (err, docs) {
-        if (docs.length === 0) {
-            return res.status(400).send("The OTP expired. Please try again!");
-        } else {
-            const generatedOtp = docs[0].otp;
+//     Otp.find({ email: Email }, async function (err, docs) {
+//         if (docs.length === 0) {
+//             return res.status(400).send("The OTP expired. Please try again!");
+//         } else {
+//             const generatedOtp = docs[0].otp;
 
-            const validHandyman = await bcrypt.compare(inputOtp, generatedOtp);
+//             const validHandyman = await bcrypt.compare(inputOtp, generatedOtp);
 
-            if (Email === docs[0].email && validHandyman) {
-                // generating handymman token
-                const secret = JWT_SECRET;
-                const payload = {
-                    email: Email,
-                };
-                const token = jwt.sign(payload, secret);
+//             if (Email === docs[0].email && validHandyman) {
+//                 // generating handymman token
+//                 const secret = JWT_SECRET;
+//                 const payload = {
+//                     email: Email,
+//                 };
+//                 const token = jwt.sign(payload, secret);
 
-                // Hash the password
-                const salt = await bcrypt.genSalt();
-                const hashedPassword = await bcrypt.hash(Password, salt);
+//                 // Hash the password
+//                 const salt = await bcrypt.genSalt();
+//                 const hashedPassword = await bcrypt.hash(Password, salt);
 
-                const new_handyman = new Handyman({
-                    handyman_id: token,
-                    name: Name,
-                    email: Email,
-                    phone: Phone,
-                    password: hashedPassword,
-                    aadharNumber: AadharNumber,
-                    aadharFront: undefined,
-                    aadharBack: undefined,
-                    lat: Lat,
-                    long: Long,
-                    services: Services,
-                    profile: Profile,
-                    usersSelected: [],
-                });
+//                 const new_handyman = new Handyman({
+//                     handyman_id: token,
+//                     name: Name,
+//                     email: Email,
+//                     phone: Phone,
+//                     password: hashedPassword,
+//                     aadharNumber: AadharNumber,
+//                     aadharFront: undefined,
+//                     aadharBack: undefined,
+//                     lat: Lat,
+//                     long: Long,
+//                     services: Services,
+//                     profile: Profile,
+//                     usersSelected: [],
+//                 });
 
-                await new_handyman.save((error, success) => {
-                    if (error) console.log(error);
-                    // else console.log("Saved::New Handyman::credentials.");
-                });
+//                 await new_handyman.save((error, success) => {
+//                     if (error) console.log(error);
+//                     // else console.log("Saved::New Handyman::credentials.");
+//                 });
 
-                // Otp.deleteMany({ email: Email }, async function (err) {
-                //     if (err) {
-                //         console.log(err);
-                //     } else {
-                //         // console.log(`OTP table for ${Email} cleared.`);
-                //     }
-                // });
+//                 // Otp.deleteMany({ email: Email }, async function (err) {
+//                 //     if (err) {
+//                 //         console.log(err);
+//                 //     } else {
+//                 //         // console.log(`OTP table for ${Email} cleared.`);
+//                 //     }
+//                 // });
 
-                try {
-                    await Otp.deleteMany({ email: Email });
-                } catch (err) {
-                    console.error(`Failed to delete OTP for ${Email}:`, err);
-                }
+//                 try {
+//                     await Otp.deleteMany({ email: Email });
+//                 } catch (err) {
+//                     console.error(`Failed to delete OTP for ${Email}:`, err);
+//                 }
 
 
-                return res.status(200).send({
-                    msg: "Handyman Account creation successful!",
-                    handyman_id: token,
-                });
-            } else {
-                return res
-                    .status(400)
-                    .send({ msg: "OTP does not match. Please try again!" });
-            }
-        }
-    });
-};
+//                 return res.status(200).send({
+//                     msg: "Handyman Account creation successful!",
+//                     handyman_id: token,
+//                 });
+//             } else {
+//                 return res
+//                     .status(400)
+//                     .send({ msg: "OTP does not match. Please try again!" });
+//             }
+//         }
+//     });
+// };
 
 // // route - http://localhost:8080/api/handyman/login
 // const handymanLogin = async (req, res) => {
@@ -241,6 +241,69 @@ const handymanVerifySignup = async (req, res) => {
 //         }
 //     });
 // };
+
+const handymanVerifySignup = async (req, res) => {
+    try {
+        const {
+            name: Name,
+            email: Email,
+            otp: inputOtp,
+            password: Password,
+            phone: Phone,
+            aadharNumber: AadharNumber,
+            services: Services,
+            profile: Profile,
+            lat: Lat,
+            long: Long,
+        } = req.body;
+
+        // find OTP record
+        const otpRecord = await Otp.findOne({ email: Email });
+        if (!otpRecord) return res.status(400).send("The OTP expired. Please try again!");
+
+        // verify OTP
+        const validHandyman = await bcrypt.compare(inputOtp, otpRecord.otp);
+        if (!validHandyman) return res.status(400).send({ msg: "OTP does not match. Please try again!" });
+
+        // generate token
+        const token = jwt.sign({ email: Email }, JWT_SECRET);
+
+        // hash password
+        const hashedPassword = await bcrypt.hash(Password, await bcrypt.genSalt());
+
+        // create handyman
+        const newHandyman = new Handyman({
+            handyman_id: token,
+            name: Name,
+            email: Email,
+            phone: Phone,
+            password: hashedPassword,
+            aadharNumber: AadharNumber,
+            aadharFront: undefined,
+            aadharBack: undefined,
+            lat: Lat,
+            long: Long,
+            services: Services,
+            profile: Profile,
+            usersSelected: [],
+        });
+
+        await newHandyman.save();
+
+        // delete OTP
+        await Otp.deleteMany({ email: Email });
+
+        return res.status(200).send({
+            msg: "Handyman Account creation successful!",
+            handyman_id: token,
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ msg: "Internal server error" });
+    }
+};
+
 
 // route - http://localhost:8080/api/handyman/login
 const handymanLogin = async (req, res) => {
@@ -289,59 +352,96 @@ const getAllHandyman = async (req, res) => {
 };
 
 // route - http://localhost:8080/api/handyman/gethandyman
-const handymanDetails = async (req, res) => {
-    const handyman_id = req.body.handyman_id;
+// const handymanDetails = async (req, res) => {
+//     const handyman_id = req.body.handyman_id;
 
-    Handyman.find({ handyman_id: handyman_id }, async function (err, docs) {
-        if (err) {
-            console.log(err);
-            res.status(400).send({ msg: "No such handyman exists" });
-        } else {
-            res.status(200).send(docs[0]);
+//     Handyman.find({ handyman_id: handyman_id }, async function (err, docs) {
+//         if (err) {
+//             console.log(err);
+//             res.status(400).send({ msg: "No such handyman exists" });
+//         } else {
+//             res.status(200).send(docs[0]);
+//         }
+//     });
+// };
+
+const handymanDetails = async (req, res) => {
+    try {
+        const handyman_id = req.body.handyman_id;
+        const handyman = await Handyman.findOne({ handyman_id });
+        if (!handyman) {
+            return res.status(400).send({ msg: "No such handyman exists" });
         }
-    });
+        res.status(200).send(handyman);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ msg: "Internal server error" });
+    }
 };
+
+
 
 // route - http://localhost:8080/api/handyman/jobstartotp
-const jobStartOtpVerify = async (req, res) => {
-    const otp = req.body.otp;
-    const Email = req.body.email;
+// const jobStartOtpVerify = async (req, res) => {
+//     const otp = req.body.otp;
+//     const Email = req.body.email;
 
-    Otp.find({ email: Email }, async function (err, docs) {
-        if (docs.length === 0) {
-            return res.status(400).send("The OTP expired. Please try again!");
-        } else {
-            const generatedOtp = docs[0].otp;
+//     Otp.find({ email: Email }, async function (err, docs) {
+//         if (docs.length === 0) {
+//             return res.status(400).send("The OTP expired. Please try again!");
+//         } else {
+//             const generatedOtp = docs[0].otp;
 
-            const validHandyman = await bcrypt.compare(otp, generatedOtp);
+//             const validHandyman = await bcrypt.compare(otp, generatedOtp);
 
-            if (Email === docs[0].email && validHandyman) {
-                // Otp.deleteMany({ email: Email }, async function (err) {
-                //     if (err) {
-                //         console.log(err);
-                //     } else {
-                //         // console.log(`OTP table for ${Email} cleared.`);
-                //     }
-                  // });
+//             if (Email === docs[0].email && validHandyman) {
+//                 // Otp.deleteMany({ email: Email }, async function (err) {
+//                 //     if (err) {
+//                 //         console.log(err);
+//                 //     } else {
+//                 //         // console.log(`OTP table for ${Email} cleared.`);
+//                 //     }
+//                   // });
 
-                try {
-                    await Otp.deleteMany({ email: Email });
-                } catch (err) {
-                    console.error(`Failed to delete OTP for ${Email}:`, err);
-                }
+//                 try {
+//                     await Otp.deleteMany({ email: Email });
+//                 } catch (err) {
+//                     console.error(`Failed to delete OTP for ${Email}:`, err);
+//                 }
 
               
-                return res.status(200).send({
-                    msg: "Job Started",
-                });
-            } else {
-                return res
-                    .status(400)
-                    .send({ msg: "OTP does not match. Please try again!" });
-            }
-        }
-    });
+//                 return res.status(200).send({
+//                     msg: "Job Started",
+//                 });
+//             } else {
+//                 return res
+//                     .status(400)
+//                     .send({ msg: "OTP does not match. Please try again!" });
+//             }
+//         }
+//     });
+// };
+
+const jobStartOtpVerify = async (req, res) => {
+    try {
+        const { otp, email: Email } = req.body;
+
+        const otpRecord = await Otp.findOne({ email: Email });
+        if (!otpRecord) return res.status(400).send("The OTP expired. Please try again!");
+
+        const validHandyman = await bcrypt.compare(otp, otpRecord.otp);
+        if (!validHandyman) return res.status(400).send({ msg: "OTP does not match. Please try again!" });
+
+        await Otp.deleteMany({ email: Email });
+
+        return res.status(200).send({ msg: "Job Started" });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ msg: "Internal server error" });
+    }
 };
+
 
 module.exports = {
     handymanVerifySignup,
