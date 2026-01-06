@@ -291,7 +291,7 @@ const handymanVerifySignup = async (req, res) => {
         await newHandyman.save();
 
         // delete OTP
-        await Otp.deleteMany({ email: Email });
+        await Otp.deleteMany({ email: Email }).exec();
 
         return res.status(200).send({
             msg: "Handyman Account creation successful!",
@@ -432,7 +432,7 @@ const jobStartOtpVerify = async (req, res) => {
         const validHandyman = await bcrypt.compare(otp, otpRecord.otp);
         if (!validHandyman) return res.status(400).send({ msg: "OTP does not match. Please try again!" });
 
-        await Otp.deleteMany({ email: Email });
+        await Otp.deleteMany({ email: Email }).exec();
 
         return res.status(200).send({ msg: "Job Started" });
 
