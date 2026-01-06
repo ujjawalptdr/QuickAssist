@@ -180,13 +180,20 @@ const handymanVerifySignup = async (req, res) => {
                     // else console.log("Saved::New Handyman::credentials.");
                 });
 
-                Otp.deleteMany({ email: Email }, async function (err) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        // console.log(`OTP table for ${Email} cleared.`);
-                    }
-                });
+                // Otp.deleteMany({ email: Email }, async function (err) {
+                //     if (err) {
+                //         console.log(err);
+                //     } else {
+                //         // console.log(`OTP table for ${Email} cleared.`);
+                //     }
+                // });
+
+                try {
+                    await Otp.deleteMany({ email: Email });
+                } catch (err) {
+                    console.error(`Failed to delete OTP for ${Email}:`, err);
+                }
+
 
                 return res.status(200).send({
                     msg: "Handyman Account creation successful!",
@@ -309,13 +316,21 @@ const jobStartOtpVerify = async (req, res) => {
             const validHandyman = await bcrypt.compare(otp, generatedOtp);
 
             if (Email === docs[0].email && validHandyman) {
-                Otp.deleteMany({ email: Email }, async function (err) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        // console.log(`OTP table for ${Email} cleared.`);
-                    }
-                });
+                // Otp.deleteMany({ email: Email }, async function (err) {
+                //     if (err) {
+                //         console.log(err);
+                //     } else {
+                //         // console.log(`OTP table for ${Email} cleared.`);
+                //     }
+                  // });
+
+                try {
+                    await Otp.deleteMany({ email: Email });
+                } catch (err) {
+                    console.error(`Failed to delete OTP for ${Email}:`, err);
+                }
+
+              
                 return res.status(200).send({
                     msg: "Job Started",
                 });
