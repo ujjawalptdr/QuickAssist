@@ -11,6 +11,7 @@
   "author": "Ujjawal Patidar",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^8.1.6",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.36.4",
     "cors": "^2.8.5",
