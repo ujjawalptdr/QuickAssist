@@ -39,7 +39,6 @@ app.use("/api", require("./routes/notificationRoutes"));
 app.use("/api", require("./routes/paymentRoutes"));
 
 
-
 // // if (process.env.NODE_ENV === "production") {
 // // serve React build
 // app.use(express.static(path.join(__dirname, "client", "build")));

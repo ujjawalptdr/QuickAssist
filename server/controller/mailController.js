@@ -3,8 +3,21 @@ require("dotenv").config();
 
 // to send otp mail
 function sendOtpMail(Email, otp) {
-    // let transporter = nodemailer.createTransport({
-    //     service: "gmail",
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.NODE_MAILER_USER,
+            pass: process.env.NODE_MAILER_PASS,
+        },
+        tls: {
+            rejectUnauthorized: false,
+        },
+    });
+
+    //     let transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",  // <- changed
+    //     port: 587,               // <- added
+    //     secure: false,           // <- added, use TLS
     //     auth: {
     //         user: process.env.NODE_MAILER_USER,
     //         pass: process.env.NODE_MAILER_PASS,
@@ -13,19 +26,6 @@ function sendOtpMail(Email, otp) {
     //         rejectUnauthorized: false,
     //     },
     // });
-
-    let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",  // <- changed
-    port: 587,               // <- added
-    secure: false,           // <- added, use TLS
-    auth: {
-        user: process.env.NODE_MAILER_USER,
-        pass: process.env.NODE_MAILER_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
-});
 
 
     let mailOptions = {
@@ -47,8 +47,21 @@ function sendOtpMail(Email, otp) {
 
 // to send job start otp mail
 function sendJobStartOtpMail(Email, otp) {
-    // let transporter = nodemailer.createTransport({
-    //     service: "gmail",
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.NODE_MAILER_USER,
+            pass: process.env.NODE_MAILER_PASS,
+        },
+        tls: {
+            rejectUnauthorized: false,
+        },
+    });
+
+    //     let transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",  // <- changed
+    //     port: 587,               // <- added
+    //     secure: false,           // <- added, use TLS
     //     auth: {
     //         user: process.env.NODE_MAILER_USER,
     //         pass: process.env.NODE_MAILER_PASS,
@@ -57,19 +70,6 @@ function sendJobStartOtpMail(Email, otp) {
     //         rejectUnauthorized: false,
     //     },
     // });
-
-    let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",  // <- changed
-    port: 587,               // <- added
-    secure: false,           // <- added, use TLS
-    auth: {
-        user: process.env.NODE_MAILER_USER,
-        pass: process.env.NODE_MAILER_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
-});
 
 
     let mailOptions = {
@@ -91,8 +91,21 @@ function sendJobStartOtpMail(Email, otp) {
 
 // to send Login Verification Mail
 function sendLoginVerificationMail(Details) {
-    // let transporter = nodemailer.createTransport({
-    //     service: "gmail",
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.NODE_MAILER_USER,
+            pass: process.env.NODE_MAILER_PASS,
+        },
+        tls: {
+            rejectUnauthorized: false,
+        },
+    });
+
+    //     let transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",  // <- changed
+    //     port: 587,               // <- added
+    //     secure: false,           // <- added, use TLS
     //     auth: {
     //         user: process.env.NODE_MAILER_USER,
     //         pass: process.env.NODE_MAILER_PASS,
@@ -101,19 +114,6 @@ function sendLoginVerificationMail(Details) {
     //         rejectUnauthorized: false,
     //     },
     // });
-
-    let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",  // <- changed
-    port: 587,               // <- added
-    secure: false,           // <- added, use TLS
-    auth: {
-        user: process.env.NODE_MAILER_USER,
-        pass: process.env.NODE_MAILER_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
-});
 
 
     let mailOptions = {
@@ -135,8 +135,21 @@ function sendLoginVerificationMail(Details) {
 
 // to send ticket
 function sendTicket(Details) {
-    // let transporter = nodemailer.createTransport({
-    //     service: "gmail",
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.NODE_MAILER_USER,
+            pass: process.env.NODE_MAILER_PASS,
+        },
+        tls: {
+            rejectUnauthorized: false,
+        },
+    });
+
+    //     let transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",  // <- changed
+    //     port: 587,               // <- added
+    //     secure: false,           // <- added, use TLS
     //     auth: {
     //         user: process.env.NODE_MAILER_USER,
     //         pass: process.env.NODE_MAILER_PASS,
@@ -145,19 +158,6 @@ function sendTicket(Details) {
     //         rejectUnauthorized: false,
     //     },
     // });
-
-    let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",  // <- changed
-    port: 587,               // <- added
-    secure: false,           // <- added, use TLS
-    auth: {
-        user: process.env.NODE_MAILER_USER,
-        pass: process.env.NODE_MAILER_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
-});
 
 
     let mailOptions = {
