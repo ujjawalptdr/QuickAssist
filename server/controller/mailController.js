@@ -289,172 +289,172 @@
 
 // worked but in spam
 
-// const sgMail = require("@sendgrid/mail");
-// require("dotenv").config();
-
-// // Set API key
-// sgMail.setApiKey(process.env.SENDGRID_API);
-
-// // Sender object
-// const FROM = {
-//     name: "QuickAssist",
-//     email: process.env.NODE_MAILER_USER, // verified sender email
-// };
-
-// // --- Functions ---
-
-// // Send OTP Mail
-// function sendOtpMail(Email, otp) {
-//     const msg = {
-//         to: Email,
-//         from: FROM,
-//         subject: "One Time Password - QuickAssist",
-//         html: `Please keep your OTP confidential and do not share it with anyone. The OTP will be valid for five minutes only. <br><strong>OTP: ${otp}</strong><br><br>Thank you for choosing QuickAssist!<br><br>If you have any questions, please contact us at:<br>ujjawalpatidar0303@gmail.com`,
-//     };
-
-//     sgMail
-//         .send(msg)
-//         .then(() => console.log(`OTP email sent to ${Email}`))
-//         .catch((err) => console.log(err));
-// }
-
-// // Send Job Start OTP Mail
-// function sendJobStartOtpMail(Email, otp) {
-//     const msg = {
-//         to: Email,
-//         from: FROM,
-//         subject: "Job Start One Time Password - QuickAssist",
-//         html: `Please share this OTP with the handyman once he arrives. <br><strong>OTP: ${otp}</strong><br><br>Thank you for choosing Local Handyman!<br><br>If you have any questions, please contact us at:<br>ujjawalpatidar0303@gmail.com`,
-//     };
-
-//     sgMail
-//         .send(msg)
-//         .then(() => console.log(`Job start OTP email sent to ${Email}`))
-//         .catch((err) => console.log(err));
-// }
-
-// // Send Login Verification Mail
-// function sendLoginVerificationMail(Details) {
-//     const msg = {
-//         to: Details.email,
-//         from: FROM,
-//         subject: `Login Successful - at QuickAssist`,
-//         html: `Dear <i>${Details.name}</i>,<br><br>You have successfully logged in to your account at QuickAssist! Thank you for being a part of our community.<br><br>If you have any questions or concerns, please don't hesitate to reach out to us. We're here to help please contact us at:<br>ujjawalpatidar0303@gmail.com.<br><br>Best regards,<br>Team - QuickAssist`,
-//     };
-
-//     sgMail
-//         .send(msg)
-//         .then(() => console.log(`Login verification email sent to ${Details.email}`))
-//         .catch((err) => console.log(err));
-// }
-
-// // Send Ticket Mail
-// function sendTicket(Details) {
-//     const msg = {
-//         to: Details.email,
-//         from: FROM,
-//         subject: `Your Online Event Pass for ${Details.event_name} - Local Handyman✨`,
-//         html: `Dear <i>${Details.name}</i>,<br><br>Thank you for registering for ${Details.event_name}! We are excited to have you join us and want to make sure that you have all the information you need to have a great time.<br><br>Your online pass has been generated and is ready for you to use. Please remember to keep this pass with you at all times during the event and do not share it with anyone else.<br><br><strong>Pass Number: ${Details.pass}</strong><br><br>Here are the details of your registration:<br>Name: ${Details.name}<br>Amount Paid: ${Details.price}<br>Address: ${Details.address1} <br> City: ${Details.city} <br> PinCode: ${Details.zip}<br><br>If you have any questions or concerns, please don't hesitate to reach out to us. We're here to help please contact us at:<br>email : ujjawalpatidar0303@gmail.com.<br><br>Best regards,<br>The QuickAssist team`,
-//     };
-
-//     sgMail
-//         .send(msg)
-//         .then(() => console.log(`Ticket email sent to ${Details.email}`))
-//         .catch((err) => console.log(err));
-// }
-
-// // Export functions
-// module.exports = {
-//     sendOtpMail,
-//     sendLoginVerificationMail,
-//     sendTicket,
-//     sendJobStartOtpMail,
-// };
-
-
-
-
-const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 require("dotenv").config();
 
-// --- Transporter using SendGrid SMTP ---
-const transporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
-    port: 465,          // SSL port
-    secure: true,       // must be true for port 465
-    auth: {
-        user: "apikey",                // literal string "apikey"
-        pass: process.env.SENDGRID_API, // your SendGrid API key
-    },
-});
+// Set API key
+sgMail.setApiKey(process.env.SENDGRID_API);
 
-// --- Sender object ---
+// Sender object
 const FROM = {
     name: "QuickAssist",
-    address: process.env.NODE_MAILER_USER, // verified sender email
+    email: process.env.NODE_MAILER_USER, // verified sender email
 };
-
-// --- Helper to send email ---
-function sendMail({ to, subject, html, text }) {
-    const mailOptions = {
-        from: FROM,
-        to,
-        subject,
-        html,
-        text: text || html.replace(/<[^>]*>?/gm, ""), // convert HTML to plain text if not provided
-    };
-
-    transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            console.log("Error sending email:", err);
-        } else {
-            console.log(`Email sent to ${to} - Message ID: ${info.messageId}`);
-        }
-    });
-}
 
 // --- Functions ---
 
 // Send OTP Mail
 function sendOtpMail(Email, otp) {
-    sendMail({
+    const msg = {
         to: Email,
+        from: FROM,
         subject: "One Time Password - QuickAssist",
         html: `Please keep your OTP confidential and do not share it with anyone. The OTP will be valid for five minutes only. <br><strong>OTP: ${otp}</strong><br><br>Thank you for choosing QuickAssist!<br><br>If you have any questions, please contact us at:<br>ujjawalpatidar0303@gmail.com`,
-    });
+    };
+
+    sgMail
+        .send(msg)
+        .then(() => console.log(`OTP email sent to ${Email}`))
+        .catch((err) => console.log(err));
 }
 
 // Send Job Start OTP Mail
 function sendJobStartOtpMail(Email, otp) {
-    sendMail({
+    const msg = {
         to: Email,
+        from: FROM,
         subject: "Job Start One Time Password - QuickAssist",
         html: `Please share this OTP with the handyman once he arrives. <br><strong>OTP: ${otp}</strong><br><br>Thank you for choosing Local Handyman!<br><br>If you have any questions, please contact us at:<br>ujjawalpatidar0303@gmail.com`,
-    });
+    };
+
+    sgMail
+        .send(msg)
+        .then(() => console.log(`Job start OTP email sent to ${Email}`))
+        .catch((err) => console.log(err));
 }
 
 // Send Login Verification Mail
 function sendLoginVerificationMail(Details) {
-    sendMail({
+    const msg = {
         to: Details.email,
+        from: FROM,
         subject: `Login Successful - at QuickAssist`,
-        html: `Dear <i>${Details.name}</i>,<br><br>You have successfully logged in to your account at QuickAssist! Thank you for being a part of our community.<br><br>If you have any questions or concerns, please contact us at:<br>ujjawalpatidar0303@gmail.com.<br><br>Best regards,<br>Team - QuickAssist`,
-    });
+        html: `Dear <i>${Details.name}</i>,<br><br>You have successfully logged in to your account at QuickAssist! Thank you for being a part of our community.<br><br>If you have any questions or concerns, please don't hesitate to reach out to us. We're here to help please contact us at:<br>ujjawalpatidar0303@gmail.com.<br><br>Best regards,<br>Team - QuickAssist`,
+    };
+
+    sgMail
+        .send(msg)
+        .then(() => console.log(`Login verification email sent to ${Details.email}`))
+        .catch((err) => console.log(err));
 }
 
 // Send Ticket Mail
 function sendTicket(Details) {
-    sendMail({
+    const msg = {
         to: Details.email,
+        from: FROM,
         subject: `Your Online Event Pass for ${Details.event_name} - Local Handyman✨`,
-        html: `Dear <i>${Details.name}</i>,<br><br>Thank you for registering for ${Details.event_name}! We are excited to have you join us.<br><br>Your online pass has been generated and is ready for you to use.<br><br><strong>Pass Number: ${Details.pass}</strong><br><br>Details:<br>Name: ${Details.name}<br>Amount Paid: ${Details.price}<br>Address: ${Details.address1}, ${Details.city}, ${Details.zip}<br><br>If you have any questions, contact us at:<br>ujjawalpatidar0303@gmail.com.<br><br>Best regards,<br>The QuickAssist team`,
-    });
+        html: `Dear <i>${Details.name}</i>,<br><br>Thank you for registering for ${Details.event_name}! We are excited to have you join us and want to make sure that you have all the information you need to have a great time.<br><br>Your online pass has been generated and is ready for you to use. Please remember to keep this pass with you at all times during the event and do not share it with anyone else.<br><br><strong>Pass Number: ${Details.pass}</strong><br><br>Here are the details of your registration:<br>Name: ${Details.name}<br>Amount Paid: ${Details.price}<br>Address: ${Details.address1} <br> City: ${Details.city} <br> PinCode: ${Details.zip}<br><br>If you have any questions or concerns, please don't hesitate to reach out to us. We're here to help please contact us at:<br>email : ujjawalpatidar0303@gmail.com.<br><br>Best regards,<br>The QuickAssist team`,
+    };
+
+    sgMail
+        .send(msg)
+        .then(() => console.log(`Ticket email sent to ${Details.email}`))
+        .catch((err) => console.log(err));
 }
 
-// --- Export functions ---
+// Export functions
 module.exports = {
     sendOtpMail,
     sendLoginVerificationMail,
     sendTicket,
     sendJobStartOtpMail,
 };
+
+
+
+
+// const nodemailer = require("nodemailer");
+// require("dotenv").config();
+
+// // --- Transporter using SendGrid SMTP ---
+// const transporter = nodemailer.createTransport({
+//     host: "smtp.sendgrid.net",
+//     port: 465,          // SSL port
+//     secure: true,       // must be true for port 465
+//     auth: {
+//         user: "apikey",                // literal string "apikey"
+//         pass: process.env.SENDGRID_API, // your SendGrid API key
+//     },
+// });
+
+// // --- Sender object ---
+// const FROM = {
+//     name: "QuickAssist",
+//     address: process.env.NODE_MAILER_USER, // verified sender email
+// };
+
+// // --- Helper to send email ---
+// function sendMail({ to, subject, html, text }) {
+//     const mailOptions = {
+//         from: FROM,
+//         to,
+//         subject,
+//         html,
+//         text: text || html.replace(/<[^>]*>?/gm, ""), // convert HTML to plain text if not provided
+//     };
+
+//     transporter.sendMail(mailOptions, (err, info) => {
+//         if (err) {
+//             console.log("Error sending email:", err);
+//         } else {
+//             console.log(`Email sent to ${to} - Message ID: ${info.messageId}`);
+//         }
+//     });
+// }
+
+// // --- Functions ---
+
+// // Send OTP Mail
+// function sendOtpMail(Email, otp) {
+//     sendMail({
+//         to: Email,
+//         subject: "One Time Password - QuickAssist",
+//         html: `Please keep your OTP confidential and do not share it with anyone. The OTP will be valid for five minutes only. <br><strong>OTP: ${otp}</strong><br><br>Thank you for choosing QuickAssist!<br><br>If you have any questions, please contact us at:<br>ujjawalpatidar0303@gmail.com`,
+//     });
+// }
+
+// // Send Job Start OTP Mail
+// function sendJobStartOtpMail(Email, otp) {
+//     sendMail({
+//         to: Email,
+//         subject: "Job Start One Time Password - QuickAssist",
+//         html: `Please share this OTP with the handyman once he arrives. <br><strong>OTP: ${otp}</strong><br><br>Thank you for choosing Local Handyman!<br><br>If you have any questions, please contact us at:<br>ujjawalpatidar0303@gmail.com`,
+//     });
+// }
+
+// // Send Login Verification Mail
+// function sendLoginVerificationMail(Details) {
+//     sendMail({
+//         to: Details.email,
+//         subject: `Login Successful - at QuickAssist`,
+//         html: `Dear <i>${Details.name}</i>,<br><br>You have successfully logged in to your account at QuickAssist! Thank you for being a part of our community.<br><br>If you have any questions or concerns, please contact us at:<br>ujjawalpatidar0303@gmail.com.<br><br>Best regards,<br>Team - QuickAssist`,
+//     });
+// }
+
+// // Send Ticket Mail
+// function sendTicket(Details) {
+//     sendMail({
+//         to: Details.email,
+//         subject: `Your Online Event Pass for ${Details.event_name} - Local Handyman✨`,
+//         html: `Dear <i>${Details.name}</i>,<br><br>Thank you for registering for ${Details.event_name}! We are excited to have you join us.<br><br>Your online pass has been generated and is ready for you to use.<br><br><strong>Pass Number: ${Details.pass}</strong><br><br>Details:<br>Name: ${Details.name}<br>Amount Paid: ${Details.price}<br>Address: ${Details.address1}, ${Details.city}, ${Details.zip}<br><br>If you have any questions, contact us at:<br>ujjawalpatidar0303@gmail.com.<br><br>Best regards,<br>The QuickAssist team`,
+//     });
+// }
+
+// // --- Export functions ---
+// module.exports = {
+//     sendOtpMail,
+//     sendLoginVerificationMail,
+//     sendTicket,
+//     sendJobStartOtpMail,
+// };
